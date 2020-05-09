@@ -15,11 +15,12 @@ High level structure of the project
 
 For the database, we store data in the following format:  
 
-{'name': name, 'source': {'source': count}}
+{'name': name, 'source': {'source_name': count}}
 
 Where,  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'name' is the unique identifier for a data item in the database, a.k.a. 'screen_name' in [Tweet objects][3].  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'source' is the user that this user retweet from.  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'source_name' is the user's unique 'screen_name' that this user retweet from.  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'count' is the number of tweets this user retweet from the source.  
 
 For example, if user John retweets three tweets from user Alice, then in the data entries, there should be an item as:  
