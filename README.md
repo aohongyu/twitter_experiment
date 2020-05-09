@@ -26,7 +26,7 @@ Where,
 For example, if user John retweets three tweets from user Alice, then in the data entries, there should be an item as:  
 
     {'name': 'John', 'source': {'Alice': 3}}  
-If John also retweets four tweets from user Bob, then the entries should look like:  
+If John also retweets four tweets from user Bob, then the entry should look like:  
 
     {'name': John, 'source': {'Alice': 3, 'Bob': 4}}
 
