@@ -15,24 +15,58 @@ High level structure of the project
 
 For the database, we store data in the following format:  
 
-{'name': name, 'source': {'source_name': count}}
+    {'name': screen_name,
+     'retweet': {'retweet_source': retweet count, ...},
+     'activity': {
+         'timeline_count': count,
+         'retweet_count': count,
+         'tweet_count': count,
+         'reply_count': count}
+    }
 
 Where,  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 'name': the unique identifier for a data entry in the database, a.k.a. 'screen_name' in [Tweet objects][3].  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'source': a list that stores all the retweet source.  
+'retweet': a list that stores all the retweet source.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'source_name': the user's unique 'screen_name' that this user retweet from.  
+'retweet_source': the user's unique 'screen_name' that this user retweet from.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'count': the number of retweets this user retweet from the source.  
+'retweet count': the number of retweets this user retweet from the source.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'activity': a list that stores user's activity.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'timeline_count': the number of tweets this user posted.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'retweet_count': the number of retweets this user posted.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'tweet_count': the number of original tweets this user posted.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'reply_count': the number of replies this user posted.
 
-For example, if user John retweets three tweets from user Alice, then in the data entries, there should be an item as:  
 
-    {'name': 'John', 'source': {'Alice': 3}}  
+For example, if user John has **one retweet**, **two original tweets**, **three replies**, and he **retweets four tweets** from user Alice, 
+
+then in the data entries, there should be an item as:  
+
+    {'name': 'John',
+     'retweet': {'Alice': 4},
+     'activity': {
+         'timeline_count': 6,
+         'retweet_count': 1,
+         'tweet_count': 2,
+         'reply_count': 3}
+    } 
 If John also retweets four tweets from user Bob, then the entry should look like:  
 
-    {'name': John, 'source': {'Alice': 3, 'Bob': 4}}
+    {'name': 'John',
+     'retweet': {'Alice': 3, 'Bob': 4},
+     'activity': {
+         'timeline_count': 6,
+         'retweet_count': 1,
+         'tweet_count': 2,
+         'reply_count': 3}
+    } 
 
 
 ## Installing
