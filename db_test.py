@@ -11,11 +11,11 @@ test_list = [
     {'name': 'Mike', 'source': {'Jhon': 5, 'Amy': 2, 'Alice': 1}},
     {'name': 'Penny', 'source': {}}
 ]
-# retweet_data.insert_many(test_list)
-# retweet_data.drop()
+# tweet_data.insert_many(test_list)
+# tweet_data.drop()
 
 
-# for x in retweet_data.find():
+# for x in tweet_data.find():
 #   print(x)
 
 
@@ -25,7 +25,7 @@ mydoc = retweet_data.find_one(myquery)
 mydoc['source']['Bob'] = 10
 mydoc['source']['Alice'] = 15
 # mydoc['source']['Penny'] = 1
-# retweet_data.update(myquery, {'$set': mydoc})
+# tweet_data.update(myquery, {'$set': mydoc})
 
 myquery = {'name': 'Penny'}
 mydoc = retweet_data.find_one(myquery)
