@@ -142,7 +142,8 @@ if __name__ == "__main__":
     #     count += source[y]
     # print(count)
     # print(count_retweet('12_tweets.txt'))  # 259
-
-    set_up_database('12_tweets.txt')
+    input_file = '22330739_tweets.txt'
+    
+    set_up_database(input_file)
     for x in retweet_data.find():
         print(x)
