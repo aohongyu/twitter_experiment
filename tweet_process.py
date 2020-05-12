@@ -83,7 +83,14 @@ def exist_or_add(screen_name):
     """
     data = {'name': screen_name}
     if retweet_data.find_one(data) is None:
-        new_tweet = {'name': screen_name, 'source': {}}
+        new_tweet = {'name': screen_name,
+                     'retweet': {},
+                     'activity': {
+                         'timeline_item': 0,
+                         'retweet': 0,
+                         'tweet': 0,
+                         'reply': 0}
+                     }
         retweet_data.insert_one(new_tweet)
 
 
@@ -134,16 +141,7 @@ if __name__ == "__main__":
     # t = json.loads(tweets)
     # print(get_tweet_usrname(t))
     # f.close()
-    #
-    # TODO:test for 12_tweets.txt, two outputs should be the same
-    # source = retweet_data.find_one({'name': 'jack'})['source']
-    # count = 0
-    # for y in source:
-    #     count += source[y]
-    # print(count)
-    # print(count_retweet('12_tweets.txt'))  # 259
     input_file = '22330739_tweets.txt'
-    
     set_up_database(input_file)
     for x in retweet_data.find():
         print(x)
