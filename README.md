@@ -13,7 +13,7 @@ High level structure of the project
 
 **RAW Twitter Object Files  API  Database**
 
-For the database, we store data in the following format:  
+For the database, the data is stored in the following format:  
 
     {'name': screen_name,
      'retweet': {'retweet_source': retweet count, ...},
@@ -45,27 +45,26 @@ Where,
 'reply_count': the number of replies this user posted.
 
 
-For example, if user John has **one retweet**, **two original tweets**, **three replies**, and he **retweets four tweets** from user Alice, 
-
+For example, if user John has, **one original tweet**, **two replies**, and he **retweets three tweets** from user Alice,  
 then in the data entries, there should be an item as:  
 
     {'name': 'John',
-     'retweet': {'Alice': 4},
+     'retweet': {'Alice': 3},
      'activity': {
          'timeline_count': 6,
-         'retweet_count': 1,
-         'tweet_count': 2,
-         'reply_count': 3}
+         'retweet_count': 3,
+         'tweet_count': 1,
+         'reply_count': 2}
     } 
-If John also retweets four tweets from user Bob, then the entry should look like:  
+If John also **retweets four tweets** from user Bob, then the entry should look like:  
 
     {'name': 'John',
      'retweet': {'Alice': 3, 'Bob': 4},
      'activity': {
-         'timeline_count': 6,
-         'retweet_count': 1,
-         'tweet_count': 2,
-         'reply_count': 3}
+         'timeline_count': 10,
+         'retweet_count': 7,
+         'tweet_count': 1,
+         'reply_count': 2}
     } 
 
 
