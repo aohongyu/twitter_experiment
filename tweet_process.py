@@ -3,7 +3,7 @@ from pymongo import MongoClient
 
 client = MongoClient('localhost', 27017)
 db = client['twitter_project']  # database named 'twitter_project'
-tweet_data = db['tweet_data']  # collection named 'retweets'
+tweet_data = db['tweet_data']  # collection named 'tweet_data'
 
 
 def is_retweet(tweet):
@@ -86,7 +86,7 @@ def get_tweet_usrname(tweet):
 def exist_or_add(screen_name):
     """
     Check if a user is already in the database, if so, do nothing; if not, then
-    add the name to the database.
+    add the name with a entry to the database.
     :param screen_name: the user's screen name
     :type screen_name: str
     :return: None

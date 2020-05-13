@@ -3,7 +3,7 @@ import json
 import tweet_process as tp
 
 file_name = '22330739_tweets.txt'  # the data file you wanna test
-user_name = 'Benioff'  # user's screen for this file
+user_name = 'Benioff'  # user's screen name for this file
 source = tp.tweet_data.find_one({'name': user_name})
 
 
