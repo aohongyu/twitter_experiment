@@ -1,4 +1,6 @@
+import glob
 import json
+import matplotlib.pyplot as plt
 from pymongo import MongoClient
 
 client = MongoClient('localhost', 27017)
@@ -161,7 +163,7 @@ def set_up_database(file):
             exist_or_add(source_name)
         tweets = f.readline()
 
-        # update activity date
+        # update activity data
         target_data = tweet_data.find_one({'name': screen_name})
         target_data['activity']['timeline_count'] = timeline_count
         target_data['activity']['retweet_count'] = retweet_count
@@ -173,7 +175,11 @@ def set_up_database(file):
 
 
 if __name__ == "__main__":
-    input_file = '22330739_tweets.txt'
-    set_up_database(input_file)
+    file_path = 'data_files/*.txt'
+    data_files = glob.glob(file_path)
+
+    for files in data_files:  # set up database
+        set_up_database(files)
+
     for x in tweet_data.find():
         print(x)
