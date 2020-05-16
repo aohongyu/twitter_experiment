@@ -178,8 +178,14 @@ if __name__ == "__main__":
     file_path = 'data_files/*.txt'
     data_files = glob.glob(file_path)
 
-    for files in data_files:  # set up database
-        set_up_database(files)
+    # for files in data_files:  # set up database
+    #     set_up_database(files)
 
-    for x in tweet_data.find():
-        print(x)
+    timeline = []
+    retweet = []
+    for data_entry in tweet_data.find():
+        timeline.append(data_entry['activity']['timeline_count'])
+        retweet.append(data_entry['activity']['reply_count'])
+
+    plt.scatter(timeline, retweet)
+    plt.show()
