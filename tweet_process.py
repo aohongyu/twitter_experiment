@@ -1,6 +1,4 @@
-import glob
 import json
-import matplotlib.pyplot as plt
 from pymongo import MongoClient
 
 client = MongoClient('localhost', 27017)
@@ -27,7 +25,7 @@ def is_reply(tweet):
     :return: whether it is a reply
     :rtype: bool
     """
-    return 'in_reply_to_status_id' in tweet
+    return tweet['in_reply_to_status_id'] is not None
 
 
 def count_retweet(data_file):
@@ -40,7 +38,7 @@ def count_retweet(data_file):
     :rtype: int
     """
     retweet_count = 0
-    f = open(data_file, "r")
+    f = open(data_file, 'r')
     tweets = f.readline()
     while tweets:
         if is_retweet(json.loads(tweets)):  # check if the tweet is a retweet
@@ -138,10 +136,6 @@ def set_up_database(file):
         exist_or_add(screen_name)
         timeline_count += 1
 
-        # check if the tweet is a reply
-        if is_reply(json_data):
-            reply_count += 1
-
         # check if the tweet is a retweet
         if is_retweet(json_data):
             retweet_count += 1
@@ -158,9 +152,12 @@ def set_up_database(file):
             # update data to the database
             tweet_data.update({'name': screen_name}, {'$set': data})
         else:
-            tweet_count += 1
-            source_name = get_tweet_usrname(json_data)
-            exist_or_add(source_name)
+            if is_reply(json_data):  # check if it is a reply
+                reply_count += 1
+            else:
+                tweet_count += 1
+                source_name = get_tweet_usrname(json_data)
+                exist_or_add(source_name)
         tweets = f.readline()
 
         # update activity data
@@ -172,20 +169,3 @@ def set_up_database(file):
         tweet_data.update({'name': screen_name}, {'$set': target_data})
 
     f.close()
-
-
-if __name__ == "__main__":
-    file_path = 'data_files/*.txt'
-    data_files = glob.glob(file_path)
-
-    # for files in data_files:  # set up database
-    #     set_up_database(files)
-
-    timeline = []
-    retweet = []
-    for data_entry in tweet_data.find():
-        timeline.append(data_entry['activity']['timeline_count'])
-        retweet.append(data_entry['activity']['reply_count'])
-
-    plt.scatter(timeline, retweet)
-    plt.show()
