@@ -1,6 +1,5 @@
 import unittest
-import json
-import tweet_process as tp
+import twitter_processor as tp
 
 file_name = 'data_files/12_tweets.txt'  # the data file you wanna test
 user_name = 'jack'  # user's screen name for this file

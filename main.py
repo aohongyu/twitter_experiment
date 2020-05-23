@@ -1,4 +1,4 @@
-import tweet_process as tp
+import twitter_processor as tp
 import matplotlib.pyplot as plt
 import glob
 import time
