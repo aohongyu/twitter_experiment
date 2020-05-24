@@ -21,28 +21,21 @@ For the database, the data is stored in the following format:
          'timeline_count': count,
          'retweet_count': count,
          'tweet_count': count,
-         'reply_count': count}
+         'reply_count': count},
+     'following': [list of followings]
     }
 
-Where,  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'name': the unique identifier for a data entry in the database, a.k.a. 'screen_name' in [Tweet objects][3].  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'retweet': a list that stores all the retweet source.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'retweet_source': the user's unique 'screen_name' that this user retweet from.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'retweet count': the number of retweets this user retweet from the source.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'activity': a list that stores user's activity.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'timeline_count': the number of tweets this user posted.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'retweet_count': the number of retweets this user posted.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'tweet_count': the number of original tweets this user posted.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-'reply_count': the number of replies this user posted.
+Where,
+* 'name': the unique identifier for a data entry in the database, a.k.a. 'screen_name' in [Tweet objects][3].  
+* 'retweet': a list that stores all the retweet source.  
+* 'retweet_source': the user's unique 'screen_name' that this user retweet from.  
+* 'retweet count': the number of retweets this user retweet from the source.  
+* 'activity': a list that stores user's activity.  
+* 'timeline_count': the number of tweets this user posted.  
+* 'retweet_count': the number of retweets this user posted.  
+* 'tweet_count': the number of original tweets this user posted.  
+* 'reply_count': the number of replies this user posted.  
+* 'following': the list of user ids this user following.
 
 
 For example, if user John has, **one original tweet**, **two replies**, and he **retweets three tweets** from user Alice,  
@@ -54,7 +47,8 @@ then in the data entries, there should be an item as:
          'timeline_count': 6,
          'retweet_count': 3,
          'tweet_count': 1,
-         'reply_count': 2}
+         'reply_count': 2},
+     'following': []
     } 
 If John also **retweets four tweets** from user Bob, then the entry should look like:  
 
@@ -64,7 +58,8 @@ If John also **retweets four tweets** from user Bob, then the entry should look 
          'timeline_count': 10,
          'retweet_count': 7,
          'tweet_count': 1,
-         'reply_count': 2}
+         'reply_count': 2},
+     'following': []
     } 
 
 
