@@ -1,7 +1,9 @@
-import twitter_processor as tp
-import matplotlib.pyplot as plt
 import glob
 import time
+
+import matplotlib.pyplot as plt
+
+import twitter_processor as tp
 
 if __name__ == "__main__":
     file_path = 'data_files/*.txt'
