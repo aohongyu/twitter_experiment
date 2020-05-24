@@ -135,7 +135,7 @@ def is_valid_date(start_date, end_date):
             return False
     except ValueError:
         print("Input date is invalid. The date should in the format of "
-              "yyyy-mm-dd or check .")
+              "yyyy-mm-dd.")
         return False
 
     return True
