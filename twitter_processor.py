@@ -171,6 +171,8 @@ def is_in_time_period(tweet, start_date, end_date):
     :type end_date: str
     :return: if the tweet posted during the time period
     :rtype: bool
+
+    Requirement: start and end date should in the format of 'yyyy-mm-dd'
     """
     if not is_valid_date(start_date, end_date):
         return False
@@ -214,10 +216,10 @@ def month_to_num(short_month):
 
 def get_following_list(user_id):
     """
-
-    :param user_id:
+    Given a user id, return a list contains all the user's following.
+    :param user_id: user id
     :type user_id: str
-    :return:
+    :return: a list of followings
     :rtype: List[str]
     """
     following_list = []
@@ -234,7 +236,7 @@ def get_following_list(user_id):
             following = f.readline()
         f.close()
     except FileNotFoundError:
-        pass
+        print("There's something wrong with account, please check user's id.")
 
     return following_list
 
@@ -309,7 +311,3 @@ def set_up_database(file):
         tweet_data.update({'name': screen_name}, {'$set': target_data})
 
     f.close()
-
-
-if __name__ == "__main__":
-    print(get_following_list('1262160257008238597'))
