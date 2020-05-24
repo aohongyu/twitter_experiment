@@ -1,4 +1,5 @@
 import json
+import os
 import time
 
 import tweepy
@@ -32,26 +33,31 @@ def get_user_screen_name(user_id):
         print(tt)
 
 
-def get_following_user_id(user_id):
+def write_following_user_id(user_id):
     """
-    Given a user screen name, return the a list of user id that the given
-    user is following.
+    Given a user id, ouput a file of user id that the given user is following.
     :param user_id: user id
     :type user_id: int
-    :return: a list of id
-    :rtype: List[str]
+    :return: None
+    :rtype: None
     """
-    friend_list = []
+    output_file = 'following_list/' + str(user_id) + '_following.txt'
+    f = open(output_file, 'w')
+
     try:
         for friends in Cursor(TWITTER_CLINET.friends_ids, id=user_id).items():
-            friend_list.append(friends)
+            f.write(str(friends))
+            f.write('\n')
+        print(str(user_id) + "_following.txt write successfully :)")
     except tweepy.RateLimitError:
         print("Rate limit exceeded.")
         print("Sleeping for rate limit.")
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
         print(tt)
-    return friend_list
+        os.remove(output_file)  # delete file if error occurs
+
+    f.close()
 
 
 def write_timeline_item(user_id, start_date, end_date):
@@ -79,6 +85,7 @@ def write_timeline_item(user_id, start_date, end_date):
         for tweets in tweepy.Cursor(TWITTER_CLINET.user_timeline,
                                     user_id=int(user_id),
                                     tweet_mode='extended').items():
+
             # extract useful part in twitter objects
             tweet_json = tweets._json
             json_str = json.dumps(tweet_json)
@@ -94,6 +101,7 @@ def write_timeline_item(user_id, start_date, end_date):
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
         print(tt)
+
     f.close()
 
 
@@ -111,4 +119,5 @@ def error_message(e):
 
 
 if __name__ == "__main__":
-    write_timeline_item('1262160257008238597', '2020-01-30', '2020-12-23')
+    # write_timeline_item('1262160257008238597', '2020-01-30', '2020-12-23')
+    write_following_user_id(1262160257008238597)
