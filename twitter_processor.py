@@ -122,7 +122,8 @@ def is_valid_date(start_date, end_date):
         start_year, start_month, start_day = start_date.split('-')
         end_year, end_month, end_day = end_date.split('-')
     except ValueError:
-        print("Input date is invalid.")
+        print("Input date is invalid. The date should in the format of "
+              "yyyy-mm-dd.")
         return False
     try:
         start = datetime.datetime(int(start_year), int(start_month),
@@ -133,7 +134,8 @@ def is_valid_date(start_date, end_date):
             print("The date period is invalid.")
             return False
     except ValueError:
-        print("Input date is invalid.")
+        print("Input date is invalid. The date should in the format of "
+              "yyyy-mm-dd or check .")
         return False
 
     return True
