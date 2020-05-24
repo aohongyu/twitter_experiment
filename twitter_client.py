@@ -26,11 +26,11 @@ def get_user_screen_name(user_id):
         user = TWITTER_CLINET.get_user(user_id)
         return user.screen_name
     except tweepy.RateLimitError:
-        print("Rate limit exceeded.")
+        print("Rate limit exceeded.\n")
         print("Sleeping for rate limit.")
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
-        print(tt)
+        error_message(tt)
 
 
 def write_following_user_id(user_id):
@@ -50,7 +50,7 @@ def write_following_user_id(user_id):
             f.write('\n')
         print(str(user_id) + "_following.txt write successfully :)")
     except tweepy.RateLimitError:
-        print("Rate limit exceeded.")
+        print("Rate limit exceeded.\n")
         print("Sleeping for rate limit.")
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
@@ -96,13 +96,36 @@ def write_timeline_item(user_id, start_date, end_date):
                 f.write('\n')
         print(user_id + "_tweets.txt write successfully :)")
     except tweepy.RateLimitError:
-        print("Rate limit exceeded.")
+        print("Rate limit exceeded.\n")
         print("Sleeping for rate limit.")
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
         print(tt)
 
     f.close()
+
+
+def is_following(user_a, user_b):
+    """
+    Given two user ids, check if a is following b.
+    :param user_a: user id for a
+    :type user_a: str
+    :param user_b: user id for b
+    :type user_b: str
+    :return: if a is following b
+    :rtype: bool
+    """
+    try:
+        status = TWITTER_CLINET.show_friendship(source_id=user_a,
+                                                target_id=user_b)
+        return status[0].following
+    except tweepy.RateLimitError:
+        print("Rate limit exceeded.\n")
+        print("Sleeping for rate limit.")
+        time.sleep(TWITTER_RATE_LIMIT)
+    except tweepy.TweepError as tt:
+        error_message(tt)
+        return False
 
 
 def error_message(e):
@@ -115,9 +138,11 @@ def error_message(e):
     """
     tojson = json.loads(
         e.reason.replace("[", "").replace("]", "").replace("'", "\""))
-    print(tojson['message'])
+    print(tojson['message'] + " Error code: " + str(tojson['code']))
 
 
 if __name__ == "__main__":
     # write_timeline_item('1262160257008238597', '2020-01-30', '2020-12-23')
-    write_following_user_id(1262160257008238597)
+    # write_following_user_id(1262160257008238597)
+    # print(is_following('1262160257008238597', '196362948'))
+    print(write_following_user_id(0))
