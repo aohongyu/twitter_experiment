@@ -90,10 +90,15 @@ def write_timeline_item(user_id, start_date, end_date):
             tweet_json = tweets._json
             json_str = json.dumps(tweet_json)
 
+            # check if the current tweet posted after the end date
+            if tp.is_above_time_period(tweet_json, end_date):
+                continue
+
             # check if the tweet is in the chosen tie period
             if tp.is_in_time_period(tweet_json, start_date, end_date):
                 f.write(json_str)
                 f.write('\n')
+
         print(user_id + "_tweets.txt write successfully :)")
     except tweepy.RateLimitError:
         print("Rate limit exceeded.")
@@ -171,4 +176,4 @@ def error_message(e):
 
 
 if __name__ == "__main__":
-    write_following_timeline('1262160257008238597', '2020-05-24', '2020-05-24')
+    write_following_timeline('1262160257008238597', '2015-05-01', '2015-05-01')

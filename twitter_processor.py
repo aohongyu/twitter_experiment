@@ -190,6 +190,31 @@ def is_in_time_period(tweet, start_date, end_date):
     return False
 
 
+def is_above_time_period(tweet, date):
+    """
+    Given a tweet and a date, check if the tweet posted after the given date.
+    :param tweet: a tweet text
+    :type tweet: dict
+    :param date: str
+    :type date: a date in the format of 'yyyy-mm-dd'
+    :return: if the tweet posted after the given date
+    :rtype: bool
+    """
+    if not is_valid_date(date, '9999-12-31'):
+        return True
+
+    posted_year = int(tweet['created_at'][-4:])
+    posted_month = month_to_num(tweet['created_at'][4:7])
+    posted_day = int(tweet['created_at'][8:10])
+    posted_date = datetime.datetime(posted_year, posted_month, posted_day)
+    target_date = str_to_date(date)
+
+    if posted_date > target_date:
+        return True
+
+    return False
+
+
 def month_to_num(short_month):
     """
     Given an abbreviation for the month, return the corresponding number.
