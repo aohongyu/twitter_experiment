@@ -72,7 +72,7 @@ def write_timeline_item(user_id, start_date, end_date):
     if not tp.is_valid_date(start_date, end_date):
         return None
 
-    output_file = 'data_files/' + user_id + '_tweets' + '.txt'
+    output_file = 'data_files/' + user_id + '_tweets.txt'
     f = open(output_file, 'w')
 
     try:
@@ -87,6 +87,7 @@ def write_timeline_item(user_id, start_date, end_date):
             if tp.is_in_time_period(tweet_json, start_date, end_date):
                 f.write(json_str)
                 f.write('\n')
+        print(user_id + "_tweets.txt write successfully :)")
     except tweepy.RateLimitError:
         print("Rate limit exceeded.")
         print("Sleeping for rate limit.")
@@ -110,4 +111,4 @@ def error_message(e):
 
 
 if __name__ == "__main__":
-    write_timeline_item('1262160257008238597', '2010-01-30', '2019-12-23')
+    write_timeline_item('1262160257008238597', '2020-01-30', '2020-12-23')

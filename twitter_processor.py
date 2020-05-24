@@ -130,7 +130,7 @@ def is_valid_date(start_date, end_date):
         end = datetime.datetime(int(end_year), int(end_month), int(end_day))
 
         if end < start:  # check if start date and end date is logical
-            print("The date domain is invalid.")
+            print("The date period is invalid.")
             return False
     except ValueError:
         print("Input date is invalid.")
