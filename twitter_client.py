@@ -18,7 +18,7 @@ def get_user_screen_name(user_id):
     """
     Given a user id, return the screen name for the corresponding user id.
     :param user_id: user id
-    :type user_id: int
+    :type user_id: str
     :return: user screen name
     :rtype: str
     """
@@ -37,11 +37,11 @@ def write_following_user_id(user_id):
     """
     Given a user id, ouput a file of user id that the given user is following.
     :param user_id: user id
-    :type user_id: int
+    :type user_id: str
     :return: None
     :rtype: None
     """
-    output_file = 'following_list/' + str(user_id) + '_following.txt'
+    output_file = 'following_list/' + user_id + '_following.txt'
     f = open(output_file, 'w')
 
     try:
@@ -54,7 +54,7 @@ def write_following_user_id(user_id):
         print("Sleeping for rate limit.")
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
-        print(tt)
+        error_message(tt)
         os.remove(output_file)  # delete file if error occurs
 
     f.close()
@@ -139,10 +139,3 @@ def error_message(e):
     tojson = json.loads(
         e.reason.replace("[", "").replace("]", "").replace("'", "\""))
     print(tojson['message'] + " Error code: " + str(tojson['code']))
-
-
-if __name__ == "__main__":
-    # write_timeline_item('1262160257008238597', '2020-01-30', '2020-12-23')
-    # write_following_user_id(1262160257008238597)
-    # print(is_following('1262160257008238597', '196362948'))
-    print(write_following_user_id(0))

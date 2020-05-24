@@ -1,7 +1,10 @@
 import datetime
 import json
+import os
 
 from pymongo import MongoClient
+
+import twitter_client as tc
 
 client = MongoClient('localhost', 27017)
 db = client['twitter_project']  # database named 'twitter_project'
@@ -209,6 +212,33 @@ def month_to_num(short_month):
     }[short_month]
 
 
+def get_following_list(user_id):
+    """
+
+    :param user_id:
+    :type user_id: str
+    :return:
+    :rtype: List[str]
+    """
+    following_list = []
+    user = 'following_list/' + user_id + '_following.txt'
+
+    if not os.path.exists(user):  # check file existence
+        tc.write_following_user_id(user_id)
+
+    try:
+        f = open(user, 'r')
+        following = f.readline()
+        while following:
+            following_list.append(following[:-1])
+            following = f.readline()
+        f.close()
+    except FileNotFoundError:
+        pass
+
+    return following_list
+
+
 def set_up_database(file):
     """
     Given tweet_data.txt, setting up a database in the format of
@@ -218,7 +248,8 @@ def set_up_database(file):
          'timeline_count': count,
          'retweet_count': count,
          'tweet_count': count,
-         'reply_count': count}
+         'reply_count': count},
+     'following': []
     }
     :param file: a tweet_data.txt file, whose data in json format
     :type file: str
@@ -232,6 +263,10 @@ def set_up_database(file):
 
     f = open(file, "r")
     tweets = f.readline()
+
+    # get user's following list
+    following_list = get_following_list(json.loads(tweets)['user']['id_str'])
+
     while tweets:
         json_data = json.loads(tweets)
 
@@ -264,12 +299,17 @@ def set_up_database(file):
                 exist_or_add(source_name)
         tweets = f.readline()
 
-        # update activity data
+        # update data
         target_data = tweet_data.find_one({'name': screen_name})
         target_data['activity']['timeline_count'] = timeline_count
         target_data['activity']['retweet_count'] = retweet_count
         target_data['activity']['tweet_count'] = tweet_count
         target_data['activity']['reply_count'] = reply_count
+        target_data['following'] = following_list
         tweet_data.update({'name': screen_name}, {'$set': target_data})
 
     f.close()
+
+
+if __name__ == "__main__":
+    print(get_following_list('1262160257008238597'))
