@@ -154,8 +154,8 @@ def write_following_timeline(user_id, start_date, end_date):
     print(TIMELINE_WRITE_MSG)
 
     for following in following_list:
-        logging.info("Writing user " + following)
-        print("Writing user " + following)
+        logging.info("Writing userid=" + following)
+        print("Writing userid=" + following)
         write_timeline_item(following, start_date, end_date)
 
 
@@ -192,7 +192,3 @@ def error_message(e):
     tojson = json.loads(
         e.reason.replace("[", "").replace("]", "").replace("'", "\""))
     return tojson['message'] + " Error code: " + str(tojson['code'])
-
-
-if __name__ == "__main__":
-    write_timeline_item('1262160257008238597', '2020-05-20', '2020-05-30')
