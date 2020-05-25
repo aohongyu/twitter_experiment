@@ -3,7 +3,7 @@ An API that can take in raw twitter object files(files with twitter object). Ext
 
 
 ## Getting Started
-Before running the program, you need to have the latest [MongoDB][1] and  [PyMongo][2] distribution installed.
+Before running the program, you need to have the latest [MongoDB][1] and distributions [PyMongo][2], [tweepy 3.8.0][4] installed.
 
 ## Prerequisites
 This program works with Python 3.5+.
@@ -70,3 +70,4 @@ You can simply run the Main function from source code for now, further GUI might
 [1]:https://docs.mongodb.com/manual/installation/
 [2]:https://pymongo.readthedocs.io/en/stable/
 [3]:https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object
+[4]:http://docs.tweepy.org/en/v3.8.0/
