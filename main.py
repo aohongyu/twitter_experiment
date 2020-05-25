@@ -1,5 +1,4 @@
 import glob
-import time
 
 import matplotlib.pyplot as plt
 
@@ -10,13 +9,9 @@ if __name__ == "__main__":
     data_files = glob.glob(file_path)
 
     print("Setting up database, please wait...")
-    start = time.time()
     for files in data_files:  # set up database
         tp.set_up_database(files)
-    end = time.time()
-    set_up_time = end - start
-    print("Database set up successfully :) for " + str("%.2f" % set_up_time)
-          + "s")
+    print("Database set up successfully")
 
     # draw a scatter plot for timeline_count v.s. retweet_count
     timeline = []

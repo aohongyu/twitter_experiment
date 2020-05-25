@@ -105,6 +105,7 @@ def write_timeline_item(user_id, start_date, end_date):
         print("Sleeping for rate limit.")
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
+        os.remove(output_file)  # delete file if error occurs
         print(tt)
 
     f.close()
@@ -129,14 +130,9 @@ def write_following_timeline(user_id, start_date, end_date):
         return
 
     print("Writing user's timeline, please wait...")
-    start = time.time()
     for following in following_list:
         print("Writing user " + following)
         write_timeline_item(following, start_date, end_date)
-    end = time.time()
-    set_time = end - start
-
-    print("All files write successfully :) for " + str("%.2f" % set_time) + "s")
 
 
 def is_following(user_a, user_b):
@@ -176,4 +172,5 @@ def error_message(e):
 
 
 if __name__ == "__main__":
-    write_following_timeline('1262160257008238597', '2015-05-01', '2015-05-01')
+    write_following_timeline('1262160257008238597', '2020-01-01', '2020-05-25')
+    # write_following_user_id('1262160257008238597')
