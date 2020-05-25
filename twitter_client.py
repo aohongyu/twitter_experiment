@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import time
 
@@ -13,6 +14,18 @@ TOKEN = ta.authenticate_twitter_app()
 TWITTER_RATE_LIMIT = 15 * 60  # 15 MINUTES
 TWITTER_CLINET = API(TOKEN)
 
+RATE_LIMIT_ERROR_MSG = "rate limit exceeded, sleeping for 15 min."
+FOLLOWING_WRITE_MSG = "_following.txt write successfully :)"
+TWEETS_WRITE_MSG = "_tweets.txt write successfully :)"
+TIMELINE_WRITE_MSG = "Writing user's timeline, please wait..."
+
+# log setup
+logging.basicConfig(level=logging.INFO,
+                    filename='app.log',
+                    filemode='a',
+                    format='%(asctime)s; %(levelname)s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+
 
 def get_user_screen_name(user_id):
     """
@@ -26,11 +39,14 @@ def get_user_screen_name(user_id):
         user = TWITTER_CLINET.get_user(user_id)
         return user.screen_name
     except tweepy.RateLimitError:
-        print("Rate limit exceeded.")
-        print("Sleeping for rate limit.")
+        logging.warning("tc.get_user_screen_name: " + RATE_LIMIT_ERROR_MSG)
+        print("tc.get_user_screen_name: " + RATE_LIMIT_ERROR_MSG)
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
-        error_message(tt)
+        logging.warning("get_user_screen_name: userid=" + str(user_id) + ". "
+                        + error_message(tt))
+        print("get_user_screen_name: userid=" + str(user_id) + ". " +
+              error_message(tt))
 
 
 def write_following_user_id(user_id):
@@ -46,15 +62,18 @@ def write_following_user_id(user_id):
 
     try:
         for friends in Cursor(TWITTER_CLINET.friends_ids, id=user_id).items():
-            f.write(str(friends))
-            f.write('\n')
-        print(str(user_id) + "_following.txt write successfully :)")
+            f.write(str(friends) + '\n')
+
+        logging.info(str(user_id) + FOLLOWING_WRITE_MSG)
+        print(str(user_id) + FOLLOWING_WRITE_MSG)
     except tweepy.RateLimitError:
-        print("Rate limit exceeded.")
-        print("Sleeping for rate limit.")
+        logging.warning("tc.write_following_user_id: " + RATE_LIMIT_ERROR_MSG)
+        print("tc.write_following_user_id: " + RATE_LIMIT_ERROR_MSG)
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
-        print(tt)
+        logging.warning(
+            "tc.write_following_user_id: userid=" + user_id + ". " + str(tt))
+        print("tc.write_following_user_id: userid=" + user_id + ". " + str(tt))
         os.remove(output_file)  # delete file if error occurs
 
     f.close()
@@ -96,17 +115,19 @@ def write_timeline_item(user_id, start_date, end_date):
 
             # check if the tweet is in the chosen tie period
             if tp.is_in_time_period(tweet_json, start_date, end_date):
-                f.write(json_str)
-                f.write('\n')
+                f.write(json_str + '\n')
 
-        print(user_id + "_tweets.txt write successfully :)")
+        logging.info(user_id + TWEETS_WRITE_MSG)
+        print(user_id + TWEETS_WRITE_MSG)
     except tweepy.RateLimitError:
-        print("Rate limit exceeded.")
-        print("Sleeping for rate limit.")
+        logging.warning("tc.write_timeline_item: " + RATE_LIMIT_ERROR_MSG)
+        print("tc.write_timeline_item: " + RATE_LIMIT_ERROR_MSG)
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
+        logging.warning(
+            "tc.write_timeline_item: " + "userid=" + user_id + ". " + str(tt))
+        print("tc.write_timeline_item: " + "userid=" + user_id + ". " + str(tt))
         os.remove(output_file)  # delete file if error occurs
-        print(tt)
 
     f.close()
 
@@ -129,8 +150,11 @@ def write_following_timeline(user_id, start_date, end_date):
     if len(following_list) == 0:
         return
 
-    print("Writing user's timeline, please wait...")
+    logging.info(TIMELINE_WRITE_MSG)
+    print(TIMELINE_WRITE_MSG)
+
     for following in following_list:
+        logging.info("Writing user " + following)
         print("Writing user " + following)
         write_timeline_item(following, start_date, end_date)
 
@@ -150,11 +174,10 @@ def is_following(user_a, user_b):
                                                 target_id=user_b)
         return status[0].following
     except tweepy.RateLimitError:
-        print("Rate limit exceeded.")
-        print("Sleeping for rate limit.")
+        logging.warning("tc.is_following: " + RATE_LIMIT_ERROR_MSG)
+        print("tc.is_following: " + RATE_LIMIT_ERROR_MSG)
         time.sleep(TWITTER_RATE_LIMIT)
-    except tweepy.TweepError as tt:
-        error_message(tt)
+    except tweepy.TweepError:
         return False
 
 
@@ -168,9 +191,8 @@ def error_message(e):
     """
     tojson = json.loads(
         e.reason.replace("[", "").replace("]", "").replace("'", "\""))
-    print(tojson['message'] + " Error code: " + str(tojson['code']))
+    return tojson['message'] + " Error code: " + str(tojson['code'])
 
 
 if __name__ == "__main__":
-    write_following_timeline('1262160257008238597', '2020-01-01', '2020-05-25')
-    # write_following_user_id('1262160257008238597')
+    write_timeline_item('1262160257008238597', '2020-05-20', '2020-05-30')

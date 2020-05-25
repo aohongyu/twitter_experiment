@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 import os
 
 from pymongo import MongoClient
@@ -9,6 +10,18 @@ import twitter_client as tc
 client = MongoClient('localhost', 27017)
 db = client['twitter_project']  # database named 'twitter_project'
 tweet_data = db['tweet_data']  # collection named 'tweet_data'
+
+INVALID_DATE_MSG = "Input date is invalid. The date should in the format of " \
+                   "yyyy-mm-dd."
+CHECK_ID_MSG = "There's something wrong with this account, please check " \
+               "user's id."
+
+# log setup
+logging.basicConfig(level=logging.INFO,
+                    filename='app.log',
+                    filemode='a',
+                    format='%(asctime)s; %(levelname)s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 
 def is_retweet(tweet):
@@ -125,20 +138,22 @@ def is_valid_date(start_date, end_date):
         start_year, start_month, start_day = start_date.split('-')
         end_year, end_month, end_day = end_date.split('-')
     except ValueError:
-        print("Input date is invalid. The date should in the format of "
-              "yyyy-mm-dd.")
+        logging.warning(INVALID_DATE_MSG)
+        print(INVALID_DATE_MSG)
         return False
+
     try:
         start = datetime.datetime(int(start_year), int(start_month),
                                   int(start_day))
         end = datetime.datetime(int(end_year), int(end_month), int(end_day))
 
         if end < start:  # check if start date and end date is logical
-            print("The date period is invalid.")
+            logging.warning("The input date period is invalid.")
+            print("The input date period is invalid.")
             return False
     except ValueError:
-        print("Input date is invalid. The date should in the format of "
-              "yyyy-mm-dd.")
+        logging.warning(INVALID_DATE_MSG)
+        print(INVALID_DATE_MSG)
         return False
 
     return True
@@ -261,7 +276,8 @@ def get_following_list(user_id):
             following = f.readline()
         f.close()
     except FileNotFoundError:
-        print("There's something wrong with account, please check user's id.")
+        logging.warning(CHECK_ID_MSG)
+        print(CHECK_ID_MSG)
 
     return following_list
 
