@@ -308,6 +308,12 @@ def set_up_database(file):
     f = open(file, "r")
     tweets = f.readline()
 
+    if tweets is "":  # make sure to skip some empty files
+        logging.warning(file[11:] + " is an empty file, skip")
+        print(file[11:] + " is an empty file, skip")
+        f.close()
+        return
+
     # get user's following list
     following_list = get_following_list(json.loads(tweets)['user']['id_str'])
 
