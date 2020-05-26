@@ -4,6 +4,7 @@ import logging
 import os
 
 import matplotlib.pyplot as plt
+import mplcursors
 from pymongo import MongoClient
 
 import twitter_client as tc
@@ -367,11 +368,22 @@ def plot_scatter():
     :return: None
     :rtype: None
     """
+    users = []
     timeline = []
     retweet = []
     for data_entry in tweet_data.find():
+        users.append(data_entry['name'])
         timeline.append(data_entry['activity']['timeline_count'])
         retweet.append(data_entry['activity']['retweet_count'])
 
-    plt.scatter(timeline, retweet)
+    fig, ax = plt.subplots()
+    ax.scatter(timeline, retweet)
+    ax.set_title('Timeline Items v.s. Retweets')
+
+    # mouse hover
+    cursor = mplcursors.cursor(hover=True)
+    cursor.connect('add',
+                   lambda sel: sel.annotation.set_text(users[sel.target.index]))
+
     plt.show()
+

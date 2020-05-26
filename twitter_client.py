@@ -14,9 +14,9 @@ TOKEN = ta.authenticate_twitter_app()
 TWITTER_RATE_LIMIT = 15 * 60  # 15 MINUTES
 TWITTER_CLINET = API(TOKEN)
 
-RATE_LIMIT_ERROR_MSG = "rate limit exceeded, sleeping for 15 min."
-FOLLOWING_WRITE_MSG = "_following.txt write successfully :)"
-TWEETS_WRITE_MSG = "_tweets.txt write successfully :)"
+RATE_LIMIT_ERROR_MSG = "Rate limit exceeded, sleeping for 15 min."
+FOLLOWING_WRITE_MSG = "_following.txt write successfully."
+TWEETS_WRITE_MSG = "_tweets.txt write successfully."
 TIMELINE_WRITE_MSG = "Writing user's timeline, please wait..."
 
 # log setup
