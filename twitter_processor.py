@@ -3,6 +3,7 @@ import json
 import logging
 import os
 
+import matplotlib.pyplot as plt
 from pymongo import MongoClient
 
 import twitter_client as tc
@@ -352,3 +353,19 @@ def set_up_database(file):
         tweet_data.update({'name': screen_name}, {'$set': target_data})
 
     f.close()
+
+
+def plot_scatter():
+    """
+    Draw a scatter plot for timeline_count v.s. retweet_count.
+    :return: None
+    :rtype: None
+    """
+    timeline = []
+    retweet = []
+    for data_entry in tweet_data.find():
+        timeline.append(data_entry['activity']['timeline_count'])
+        retweet.append(data_entry['activity']['retweet_count'])
+
+    plt.scatter(timeline, retweet)
+    plt.show()
