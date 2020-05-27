@@ -1,11 +1,14 @@
 import datetime
 import json
 import logging
+import math
 import os
 
 import matplotlib.pyplot as plt
 import mplcursors
+import sympy
 from pymongo import MongoClient
+from sympy import *
 
 import twitter_client as tc
 
@@ -17,6 +20,10 @@ INVALID_DATE_MSG = "Input date is invalid. The date should in the format of " \
                    "yyyy-mm-dd."
 CHECK_ID_MSG = "There's something wrong with this account, please check " \
                "user's id."
+
+USERS = []
+TIMELINE = []
+RETWEET = []
 
 # log setup
 logging.basicConfig(level=logging.INFO,
@@ -362,28 +369,103 @@ def set_up_database(file):
     f.close()
 
 
+def get_database_tweet_info():
+    """
+    Puts user's information into the lists.
+    :return: None
+    :rtype: None
+    """
+    for data_entry in tweet_data.find():
+        USERS.append(data_entry['name'])
+        TIMELINE.append(data_entry['activity']['timeline_count'])
+        RETWEET.append(data_entry['activity']['retweet_count'])
+
+
+def get_min_distance(fx, p):
+    """
+    Given a function f(x) and a point p, return the shortest distance between
+    the point and curve f(x).
+    :param fx: function f(x)
+    :type fx: str
+    :param p: a point in 2D plane
+    :type p: tuple
+    :return: the shortest distance between p and f(x)
+    :rtype: float
+    """
+    x = Symbol('x')
+    eqn = '(x - ' + str(p[0]) + ')**2 + (' + fx + ' - ' + str(p[1]) + ')**2'
+    print(eqn)
+
+    try:
+        deri = diff(eval(eqn))
+        print(deri)
+        r = sympy.solve(deri, x)
+        dist_list = []
+
+        for sol in r:
+            # prevent round off error
+            x = str(sol).replace("I", "0")
+            x = eval(x)
+            print(x)
+            dist_list.append(math.sqrt(eval(eqn)))
+
+        return min(dist_list)
+
+    except NameError:
+        print("The input function f(x) is not valid.")
+        return None
+
+
+def get_within_distance_user_list(fx, dist):
+    """
+    Given a function f(x) and a distance d, return a list of user whose data
+    point is within d from f(x).
+    :param fx: function f(x)
+    :type fx: str
+    :param dist: the distance between data point and f(x)
+    :type dist: int
+    :return: list of user whose data point is within d from f(x)
+    :rtype: List[str]
+    """
+    get_database_tweet_info()
+    exp_user = []
+
+    for i in range(len(USERS)):
+        p = (TIMELINE[i], RETWEET[i])
+        # get distance from every data point to the curve
+        dist_p_f = get_min_distance(fx, p)
+
+        if dist_p_f is None:
+            continue
+
+        if dist_p_f <= dist:
+            exp_user.append(USERS[i])
+
+    return exp_user
+
+
 def plot_scatter():
     """
     Draw a scatter plot for timeline_count v.s. retweet_count.
     :return: None
     :rtype: None
     """
-    users = []
-    timeline = []
-    retweet = []
-    for data_entry in tweet_data.find():
-        users.append(data_entry['name'])
-        timeline.append(data_entry['activity']['timeline_count'])
-        retweet.append(data_entry['activity']['retweet_count'])
+    get_database_tweet_info()
 
     fig, ax = plt.subplots()
-    ax.scatter(timeline, retweet)
-    ax.set_title('Timeline Items v.s. Retweets')
+    ax.scatter(TIMELINE, RETWEET)
+    ax.set_title("Timeline Items v.s. Retweets")
+    plt.xlabel("Timeline Items")
+    plt.ylabel("Retweets")
 
     # mouse hover
     cursor = mplcursors.cursor(hover=True)
     cursor.connect('add',
-                   lambda sel: sel.annotation.set_text(users[sel.target.index]))
+                   lambda sel: sel.annotation.set_text(USERS[sel.target.index]))
 
     plt.show()
 
+
+if __name__ == "__main__":
+    print(get_min_distance('6 - x**2', (0, 3)))
+    # print(get_within_distance_user_list('x ** 2', 10))
