@@ -6,6 +6,7 @@ import os
 
 import matplotlib.pyplot as plt
 import mplcursors
+import networkx as nx
 import sympy
 from pymongo import MongoClient
 from sympy import *
@@ -394,11 +395,9 @@ def get_min_distance(fx, p):
     """
     x = Symbol('x')
     eqn = '(x - ' + str(p[0]) + ')**2 + (' + fx + ' - ' + str(p[1]) + ')**2'
-    print(eqn)
 
     try:
         deri = diff(eval(eqn))
-        print(deri)
         r = sympy.solve(deri, x)
         dist_list = []
 
@@ -406,7 +405,6 @@ def get_min_distance(fx, p):
             # prevent round off error
             x = str(sol).replace("I", "0")
             x = eval(x)
-            print(x)
             dist_list.append(math.sqrt(eval(eqn)))
 
         return min(dist_list)
@@ -466,6 +464,31 @@ def plot_scatter():
     plt.show()
 
 
+def plot_following_graph(user):
+    """
+    Given a user screen_name, plot a relation graph of this user's followings.
+    :param user: user screen_name
+    :type user: str
+    :return: None
+    :rtype: None
+
+    Requirement: input user should in the database
+    """
+    following_graph = nx.DiGraph()
+
+    try:
+        following_list = tweet_data.find_one({'name': user})['following']
+        for following in following_list:
+            following_graph.add_edge(user, following)
+
+        plt.figure(figsize=(50, 50))  # graph size
+        plt.subplot(111)
+        nx.draw(following_graph)
+        plt.show()
+    except TypeError:
+        print("User is not found in the database.")
+
+
 if __name__ == "__main__":
-    print(get_min_distance('6 - x**2', (0, 3)))
-    # print(get_within_distance_user_list('x ** 2', 10))
+    # plot_following_graph('StanfordHCI')
+    plot_following_graph('clarifai')
