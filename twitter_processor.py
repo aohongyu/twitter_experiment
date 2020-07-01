@@ -489,6 +489,12 @@ def plot_following_graph(user):
         print("User is not found in the database.")
 
 
-if __name__ == "__main__":
-    # plot_following_graph('StanfordHCI')
-    plot_following_graph('clarifai')
+def community_graph(*following_file):
+    """
+    Given one or more following files, output a community partition graph.
+    :param following_file: user_id_following.txt file
+    :type following_file: str
+    :return: None
+    :rtype: None
+    """
+    pass

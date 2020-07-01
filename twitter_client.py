@@ -16,7 +16,7 @@ TWITTER_CLINET = API(TOKEN)
 
 RATE_LIMIT_ERROR_MSG = "Rate limit exceeded, sleeping for 15 min."
 FOLLOWING_WRITE_MSG = "_following.txt write successfully."
-TWEETS_WRITE_MSG = "_tweets.txt write successfully."
+TWEETS_WRITE_MSG = " write successfully."
 TIMELINE_WRITE_MSG = "Writing user's timeline, please wait..."
 
 # log setup
@@ -57,6 +57,7 @@ def write_following_user_id(user_id):
     :return: None
     :rtype: None
     """
+    user_id = user_id.replace('\n', '')
     output_file = 'following_list/' + user_id + '_following.txt'
     f = open(output_file, 'w')
 
@@ -79,7 +80,7 @@ def write_following_user_id(user_id):
     f.close()
 
 
-def write_timeline_item(user_id, start_date, end_date):
+def write_timeline_item(user_id, start_date, end_date, tweet_type):
     """
     Given a user name id and a time period, query the all the tweets in this
     period and write these data into a file.
@@ -89,15 +90,24 @@ def write_timeline_item(user_id, start_date, end_date):
     :type start_date: str
     :param end_date: end date
     :type end_date: str
+    :param tweet_type: choose to write timeline or retweet
+    :type tweet_type: str
     :return: None
     :rtype: None
 
-    Requirement: input date should in the format of 'yyyy-mm-dd'
+    Requirement: 1. input date should in the format of 'yyyy-mm-dd'
+                 2. tweet_type should be 'retweets' or 'tweets'
     """
+    if tweet_type is not 'tweets' and tweet_type is not 'retweets':
+        print('tweet_type is not valid.')
+        return None
+
     if not tp.is_valid_date(start_date, end_date):
         return None
 
-    output_file = 'data_files/' + user_id + '_tweets.txt'
+    output_file = 'data_files/' + user_id + '_' + tweet_type + ' ' + start_date \
+                  + '~' + end_date + '.txt'
+
     f = open(output_file, 'w')
 
     try:
@@ -108,17 +118,21 @@ def write_timeline_item(user_id, start_date, end_date):
             # extract useful part in twitter objects
             tweet_json = tweets._json
             json_str = json.dumps(tweet_json)
+            is_retweet = tp.is_retweet(tweet_json)
 
             # check if the current tweet posted after the end date
             if tp.is_above_time_period(tweet_json, end_date):
                 continue
 
-            # check if the tweet is in the chosen tie period
+            # check if the tweet is in the chosen time period
             if tp.is_in_time_period(tweet_json, start_date, end_date):
-                f.write(json_str + '\n')
+                if tweet_type is 'tweets':
+                    f.write(json_str + '\n')
+                elif tweet_type is 'retweets' and is_retweet:
+                    f.write(json_str + '\n')
 
-        logging.info(user_id + TWEETS_WRITE_MSG)
-        print(user_id + TWEETS_WRITE_MSG)
+        logging.info(output_file[11:] + TWEETS_WRITE_MSG)
+        print(output_file[11:] + TWEETS_WRITE_MSG)
     except tweepy.RateLimitError:
         logging.warning("tc.write_timeline_item: " + RATE_LIMIT_ERROR_MSG)
         print("tc.write_timeline_item: " + RATE_LIMIT_ERROR_MSG)
@@ -132,7 +146,7 @@ def write_timeline_item(user_id, start_date, end_date):
     f.close()
 
 
-def write_following_timeline(user_id, start_date, end_date):
+def write_following_timeline(user_id, start_date, end_date, tweet_type):
     """
     Given a user id, ouput all following's timeline in a specific time period.
     :param user_id: user id
@@ -141,10 +155,13 @@ def write_following_timeline(user_id, start_date, end_date):
     :type start_date: str
     :param end_date: end date
     :type end_date: str
+    :param tweet_type: choose to write timeline or retweet
+    :type tweet_type: str
     :return: None
     :rtype: None
 
-    Requirement: start and end date should in the format of 'yyyy-mm-dd'
+    Requirement: 1. input date should in the format of 'yyyy-mm-dd'
+                 2. tweet_type should be 'retweets' or 'tweets'
     """
     following_list = tp.get_following_list(user_id)
     if len(following_list) == 0:
@@ -156,7 +173,7 @@ def write_following_timeline(user_id, start_date, end_date):
     for following in following_list:
         logging.info("Writing userid=" + following)
         print("Writing userid=" + following)
-        write_timeline_item(following, start_date, end_date)
+        write_timeline_item(following, start_date, end_date, tweet_type)
 
 
 def is_following(user_a, user_b):
