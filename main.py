@@ -36,5 +36,5 @@ if __name__ == "__main__":
         tc.write_following_user_id(following)
         following = f.readline()
 
-    tc.write_following_timeline('2895499182', '2019-10-01', '2020-11-30',
+    tc.write_following_timeline('2895499182', '2019-10-01', '2019-11-30',
                                 'retweets')

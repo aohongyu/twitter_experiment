@@ -43,10 +43,20 @@ def get_user_screen_name(user_id):
         print("tc.get_user_screen_name: " + RATE_LIMIT_ERROR_MSG)
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
-        logging.warning("get_user_screen_name: userid=" + str(user_id) + ". "
-                        + error_message(tt))
-        print("get_user_screen_name: userid=" + str(user_id) + ". " +
-              error_message(tt))
+        if tt.response.status_code in [429, 420, 88]:
+            logging.warning("tc.get_user_screen_name: userid=" + str(user_id) +
+                            ". " + error_message(tt))
+            print("tc.get_user_screen_name: userid=" + str(user_id) + ". " +
+                  error_message(tt))
+            logging.warning("tc.get_user_screen_name: " + RATE_LIMIT_ERROR_MSG)
+            print("tc.get_user_screen_name: " + RATE_LIMIT_ERROR_MSG)
+            time.sleep(TWITTER_RATE_LIMIT)
+            pass
+        else:
+            logging.warning("tc.get_user_screen_name: userid=" + str(user_id) +
+                            ". " + error_message(tt))
+            print("tc.get_user_screen_name: userid=" + str(user_id) + ". " +
+                  error_message(tt))
 
 
 def write_following_user_id(user_id):
@@ -72,10 +82,24 @@ def write_following_user_id(user_id):
         print("tc.write_following_user_id: " + RATE_LIMIT_ERROR_MSG)
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
-        logging.warning(
-            "tc.write_following_user_id: userid=" + user_id + ". " + str(tt))
-        print("tc.write_following_user_id: userid=" + user_id + ". " + str(tt))
-        os.remove(output_file)  # delete file if error occurs
+        if tt.response.status_code in [429, 420, 88]:
+            logging.warning("tc.write_following_user_id: userid=" + user_id +
+                            ". " + str(tt))
+            print("tc.write_following_user_id: userid=" + user_id + ". " +
+                  str(tt))
+            logging.warning(
+                "tc.write_following_user_id: " + RATE_LIMIT_ERROR_MSG)
+            print("tc.write_following_user_id: " + RATE_LIMIT_ERROR_MSG)
+            time.sleep(TWITTER_RATE_LIMIT)
+            pass
+        else:
+            logging.warning("tc.write_following_user_id: userid=" + user_id +
+                            ". " + str(tt))
+            print("tc.write_following_user_id: userid=" + user_id + ". " +
+                  str(tt))
+
+            f.close()
+            os.remove(output_file)  # delete file if error occurs
 
     f.close()
 
@@ -138,10 +162,23 @@ def write_timeline_item(user_id, start_date, end_date, tweet_type):
         print("tc.write_timeline_item: " + RATE_LIMIT_ERROR_MSG)
         time.sleep(TWITTER_RATE_LIMIT)
     except tweepy.TweepError as tt:
-        logging.warning(
-            "tc.write_timeline_item: " + "userid=" + user_id + ". " + str(tt))
-        print("tc.write_timeline_item: " + "userid=" + user_id + ". " + str(tt))
-        os.remove(output_file)  # delete file if error occurs
+        if tt.response.status_code in [429, 420, 88]:
+            logging.warning("tc.write_timeline_item: " + "userid=" + user_id +
+                            ". " + str(tt))
+            print("tc.write_timeline_item: " + "userid=" + user_id + ". " +
+                  str(tt))
+            logging.warning("tc.write_timeline_item: " + RATE_LIMIT_ERROR_MSG)
+            print("tc.write_timeline_item: " + RATE_LIMIT_ERROR_MSG)
+            time.sleep(TWITTER_RATE_LIMIT)
+            pass
+        else:
+            logging.warning("tc.write_timeline_item: " + "userid=" + user_id +
+                            ". " + str(tt))
+            print("tc.write_timeline_item: " + "userid=" + user_id + ". " +
+                  str(tt))
+
+            f.close()
+            os.remove(output_file)  # delete file if error occurs
 
     f.close()
 
@@ -194,8 +231,16 @@ def is_following(user_a, user_b):
         logging.warning("tc.is_following: " + RATE_LIMIT_ERROR_MSG)
         print("tc.is_following: " + RATE_LIMIT_ERROR_MSG)
         time.sleep(TWITTER_RATE_LIMIT)
-    except tweepy.TweepError:
-        return False
+    except tweepy.TweepError as tt:
+        if tt.response.status_code in [429, 420, 88]:
+            logging.warning("tc.is_following: " + str(tt))
+            print("tc.is_following: " + str(tt))
+            logging.warning("tc.is_following: " + RATE_LIMIT_ERROR_MSG)
+            print("tc.is_following: " + RATE_LIMIT_ERROR_MSG)
+            time.sleep(TWITTER_RATE_LIMIT)
+            pass
+        else:
+            return False
 
 
 def error_message(e):
