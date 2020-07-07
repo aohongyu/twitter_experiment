@@ -100,6 +100,7 @@ def write_following_user_id(user_id):
 
             f.close()
             os.remove(output_file)  # delete file if error occurs
+            return
 
     f.close()
 
@@ -129,8 +130,8 @@ def write_timeline_item(user_id, start_date, end_date, tweet_type):
     if not tp.is_valid_date(start_date, end_date):
         return None
 
-    output_file = 'data_files/' + user_id + '_' + tweet_type + ' ' + start_date \
-                  + '~' + end_date + '.txt'
+    output_file = 'data_files/' + user_id + '_' + tweet_type + '_' + \
+                  start_date + '_' + end_date + '.txt'
 
     f = open(output_file, 'w')
 
@@ -179,6 +180,7 @@ def write_timeline_item(user_id, start_date, end_date, tweet_type):
 
             f.close()
             os.remove(output_file)  # delete file if error occurs
+            return
 
     f.close()
 
@@ -254,3 +256,8 @@ def error_message(e):
     tojson = json.loads(
         e.reason.replace("[", "").replace("]", "").replace("'", "\""))
     return tojson['message'] + " Error code: " + str(tojson['code'])
+
+
+if __name__ == '__main__':
+    write_timeline_item('1262160257008238597', '2020-07-04', '2020-07-04',
+                        'retweets')
