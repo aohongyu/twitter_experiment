@@ -489,12 +489,49 @@ def plot_following_graph(user):
         print("User is not found in the database.")
 
 
-def community_graph(*following_file):
+def community_graph_directed(user, user_following, user_neighbor_following):
     """
-    Given one or more following files, output a community partition graph.
-    :param following_file: user_id_following.txt file
-    :type following_file: str
-    :return: None
-    :rtype: None
+    Given a user, user's following, and user neighbors' following, output a
+    directed community graph.
+    :param user: user's id
+    :type user: str
+    :param user_following: a list contains user's following
+    :type user_following: List[id]
+    :param user_neighbor_following: ：List[List[str]]
+    :type user_neighbor_following: a list contains user's neighbors' following
+    :return: a community graph
+    :rtype: networkx.Graph
     """
-    pass
+    G = nx.DiGraph()
+
+    for following in user_following:
+        G.add_edge(user, following)
+
+    for i in range(len(user_neighbor_following)):
+        for following in user_neighbor_following[i]:
+            G.add_edge(user_following[i], following)
+
+    return G
+
+
+def community_graph_undirected(user, user_following, user_neighbor_following):
+    """
+    Given a user, user's following, and user neighbors' following, output a
+    undirected community graph, that is, there is an edge between two users iff
+    they are following each other.
+    :param user: user's id
+    :type user: str
+    :param user_following: a list contains user's following
+    :type user_following: List[id]
+    :param user_neighbor_following: ：List[List[str]]
+    :type user_neighbor_following: a list contains user's neighbors' following
+    :return: a community graph
+    :rtype: networkx.Graph
+    """
+    G = community_graph_directed(user, user_following, user_neighbor_following)
+    # find users who didn't follow back
+    unfollow = [(v, u) for v, u in G.edges() if not G.has_edge(u, v)]
+    G.remove_edges_from(unfollow)
+    G.remove_nodes_from(list(nx.isolates(G)))  # remove unconnected nodes
+    G = G.to_undirected()
+    return G
