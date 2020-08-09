@@ -59,6 +59,17 @@ def get_user_screen_name(user_id):
                   error_message(tt))
 
 
+def get_user_follower_num(user_id):
+    """
+    Given a user id, get the number of followers of this user.
+    :param user_id: user id
+    :type user_id: str
+    :return: the number of followers
+    :rtype: int
+    """
+    return TWITTER_CLINET.get_user(user_id).followers_count
+
+
 def write_following_user_id(user_id):
     """
     Given a user id, ouput a file of user id that the given user is following.
@@ -259,5 +270,6 @@ def error_message(e):
 
 
 if __name__ == '__main__':
-    write_timeline_item('1262160257008238597', '2020-07-04', '2020-07-04',
-                        'retweets')
+    # write_timeline_item('1262160257008238597', '2020-07-04', '2020-07-04',
+    #                     'retweets')
+    print(get_user_follower_num('1262160257008238597'))
