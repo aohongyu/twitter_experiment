@@ -48,6 +48,19 @@ def community_graph_undirected(user, user_following, user_neighbor_following):
     G = G.to_undirected()
     return G
 
+def neighbors_clustering(user, directed, algorithm_keywords):
+    """
+    Given a user id, this algorithm would automate the process of clustering on the 
+    neighbor, using the algorithm indicated by the algorithm_keywrods
+    :param user: user's id
+    :type user: str
+    :param algorithm_keywords: a key word indicate the algorithm use
+    :type algorithm_keywords: str
+    :param directed: boolean indicate if to constructed a directed/undirected graph
+    :type directed: boolean
+    """
+    
+
 
 if __name__ == "__main__":
     g = community_graph_directed('1', ['2', '3'], [['5', '6'], ['1', '2']])
