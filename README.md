@@ -1,5 +1,5 @@
 # Twitter Experiment
-An API that crawling raw twitter object files(files with twitter object) from Twitter. Extracting useful information from the files, and plot the users' community graph only for academic research.
+An API that crawling raw user related objects from Twitter, extracting useful information and plot the users' community graph only for academic research.
 
 
 ## Getting Started
@@ -43,7 +43,7 @@ The program will output a json graph either directed or undirected of the user's
 
 
 ## Installing
-Simply run the main function from source code for now, further GUI and features like NLP analysis might be added.
+Simply run the main function from source code for now, further GUI and features like community clustering(under development) and NLP analysis might be added.
 
 
 [1]:https://networkx.github.io/
