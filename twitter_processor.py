@@ -273,7 +273,9 @@ def get_following_list(user_id):
     """
     following_list = []
     user = 'following_list/' + user_id + '_following.txt'
-    tc.write_following_user_id(user_id)
+
+    if not os.path.exists(user):  # check file existence
+        tc.write_following_user_id(user_id)
 
     try:
         f = open(user, 'r')
