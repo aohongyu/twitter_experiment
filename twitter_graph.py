@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 
+
 def community_graph_directed(user, user_following, user_neighbor_following):
     """
     Given a user, user's following, and user neighbors' following, output a
@@ -48,10 +49,11 @@ def community_graph_undirected(user, user_following, user_neighbor_following):
     G = G.to_undirected()
     return G
 
+
 def neighbors_clustering(user, directed, algorithm_keywords):
     """
-    Given a user id, this algorithm would automate the process of clustering on the 
-    neighbor, using the algorithm indicated by the algorithm_keywrods
+    Given a user id, this algorithm would automate the process of clustering on
+    the neighbor, using the algorithm indicated by the algorithm_keywrods
     :param user: user's id
     :type user: str
     :param algorithm_keywords: a key word indicate the algorithm use
@@ -59,7 +61,7 @@ def neighbors_clustering(user, directed, algorithm_keywords):
     :param directed: boolean indicate if to constructed a directed/undirected graph
     :type directed: boolean
     """
-    
+    pass
 
 
 if __name__ == "__main__":

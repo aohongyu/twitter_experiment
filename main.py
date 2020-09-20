@@ -1,9 +1,6 @@
-import glob
 import logging
 
-import twitter_processor as tp
 import twitter_client as tc
-import json
 
 # log setup
 logging.basicConfig(level=logging.INFO,
@@ -13,28 +10,39 @@ logging.basicConfig(level=logging.INFO,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 if __name__ == "__main__":
-    # file_path = 'data_files/*.txt'
-    # data_files = glob.glob(file_path)
-    #
-    # logging.info("Setting up database, please wait...")
-    # print("Setting up database, please wait...")
-    # for files in data_files:  # set up database
-    #     logging.info("Reading file " + files[11:])
-    #     print("Reading file " + files[11:])
-    #     tp.set_up_database(files)
-    #
-    # logging.info("Database set up successfully.")
-    # print("Database set up successfully.")
-    #
-    # tp.plot_scatter()
+    user_id = 0
+    while True:
+        try:
+            user_id = int(input("Please enter user ID. If you don't have it, "
+                                "you can search on https://tweeterid.com/.\n"))
+        except ValueError:
+            print("The user ID should be an integer, please try again.")
+            continue
+        else:
+            break
 
-    tc.write_following_user_id('2895499182')
+    command = None
+    while True:
+        try:
+            command = int(input("Please tell us what you want to do:\n1: write "
+                                "timeline items\n2: write following IDs\n"))
+        except ValueError:
+            print("The input should be an integer, please try again.")
+            continue
 
-    f = open('following_list/2895499182_following.txt', 'r')
-    following = f.readline()
-    while following:
-        tc.write_following_user_id(following)
-        following = f.readline()
+        if command != 1 and command != 2:
+            print("Sorry, we don't have option " + str(command) + " for now.")
+            continue
+        else:
+            break
 
-    tc.write_following_timeline('2895499182', '2019-10-01', '2019-11-30',
-                                'retweets')
+    if command == 1:
+        print("Please tell us the period you'd like to query.")
+        start = input("What's the start date? (yyyy-mm-dd)\n")
+        end = input("What's the end date? (yyyy-mm-dd)\n")
+        option = input("What kind of timeline items you'd like to query, "
+                       "tweets or retweets?\n")
+        tc.write_timeline_item(str(user_id), start, end, option)
+    elif command == 2:
+        tc.write_following_user_id(str(user_id))
+
