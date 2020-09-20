@@ -134,8 +134,8 @@ def write_timeline_item(user_id, start_date, end_date, tweet_type):
     Requirement: 1. input date should in the format of 'yyyy-mm-dd'
                  2. tweet_type should be 'retweets' or 'tweets'
     """
-    if tweet_type is not 'tweets' and tweet_type is not 'retweets':
-        print('tweet_type is not valid.')
+    if tweet_type != 'tweets' and tweet_type != 'retweets':
+        print("tweet_type is not valid.")
         return None
 
     if not tp.is_valid_date(start_date, end_date):
