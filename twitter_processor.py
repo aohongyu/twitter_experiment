@@ -273,9 +273,7 @@ def get_following_list(user_id):
     """
     following_list = []
     user = 'following_list/' + user_id + '_following.txt'
-
-    if not os.path.exists(user):  # check file existence
-        tc.write_following_user_id(user_id)
+    tc.write_following_user_id(user_id)
 
     try:
         f = open(user, 'r')
@@ -289,6 +287,24 @@ def get_following_list(user_id):
         print(CHECK_ID_MSG)
 
     return following_list
+
+
+def get_following_following_list(user_id):
+    """
+    Given a user id, return a list contains all the user's followings'
+    followings.
+    :param user_id: user id
+    :type user_id: str
+    :return: a list of list of followings
+    :rtype: List[List[str]]
+    """
+    following_following_list = []
+    following_list = get_following_list(user_id)
+
+    for user in following_list:
+        following_following_list.append(get_following_list(user))
+
+    return following_following_list
 
 
 def set_up_database(file):
